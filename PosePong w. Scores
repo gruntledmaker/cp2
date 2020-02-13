@@ -1,0 +1,221 @@
+let video;
+let poseNet;
+let poses = [];
+
+let L = 9;
+let R = 9;
+
+var x, y;
+var vx, vy;
+var leftPaddle;
+var rightPaddle;
+
+
+function setup() {
+  createCanvas(640, 480);
+  video = createCapture(VIDEO);
+  video.size(width, height);
+
+  // Create a new poseNet method with a single detection
+  poseNet = ml5.poseNet(video, modelReady);
+  // This sets up an event that fills the global variable "poses"
+  // with an array every time new poses are detected
+  poseNet.on('pose', function(results) {
+    poses = results;
+  });
+  // Hide the video element, and just show the canvas
+  video.hide();
+  
+  x = width/2;
+  y = height/2;
+  vx = -3;
+  vy = 1.2;
+  
+  leftPaddle = height/2;
+  rightPaddle = height/2;
+  
+  rectMode(CENTER);
+}
+
+function modelReady() {
+  select('#status').html('Model Loaded');
+}
+
+function draw() {
+  image(video, 0, 0, width, height);
+  rect(20, leftPaddle, 10, 50);
+  rect(width-20, rightPaddle, 10, 50);
+  
+  ellipse(x, y, 20);
+  
+  x += vx;
+  y += vy;
+  
+  if (y <= 0) {
+    vy *= -1;
+  }
+  
+  if (y >= height) {
+    vy *= -1;
+  }
+  
+  if (x < 35) {
+    if (y < leftPaddle+25 && y > leftPaddle-25) {
+      vx = -vx;
+    } else {
+      if (x <= -10) {
+        x = width/2;
+        y = height/2;
+        vx *= -1;
+        vy *= -1;
+        
+        R += 1;
+      }
+    }
+  }
+  
+  if (x > width - 35) {
+    if (y < rightPaddle+25 && y > rightPaddle-25) {
+      vx = -vx;
+    } else {
+        if (x >= width + 10) {
+         x = width/2;
+         y = height/2;
+         vx *= -1;
+         vy *= -1;
+          
+         L += 1;
+      }
+    }
+  }
+  
+  
+  textSize(20);
+  colorMode(HSB);
+  fill(0, 0, 100)
+ 
+    if (L == 0) {
+    text('0', width/3, height - 70);
+  }
+  
+    if (L == 1) {
+    text('1', width/3, height - 70);
+  }
+  
+    if (L == 2) {
+    text('2', width/3, height - 70);
+  }
+  
+    if (L == 3) {
+    text('3', width/3, height - 70);
+  }
+  
+    if (L == 4) {
+    text('4', width/3, height - 70);
+  }
+  
+    if (L == 5) {
+    text('5', width/3, height - 70);
+  }
+  
+    if (L == 6) {
+    text('6', width/3, height - 70);
+  }
+  
+    if (L == 7) {
+    text('7', width/3, height - 70);
+  }
+  
+    if (L == 8) {
+    text('8', width/3, height - 70);
+  }
+  
+    if (L == 9) {
+    text('9', width/3, height - 70);
+  }
+  
+    if (L == 10) {
+    text('10', width/3, height - 70);
+  }
+  
+    if (R == 0) {
+    text('0', 2*width/3, height - 70);
+  }
+  
+    if (R == 1) {
+    text('1', 2*width/3, height - 70);
+  }
+  
+    if (R == 2) {
+    text('2', 2*width/3, height - 70);
+  }
+  
+    if (R == 3) {
+    text('3', 2*width/3, height - 70);
+  }
+  
+    if (R == 4) {
+    text('4', 2*width/3, height - 70);
+  }
+  
+    if (R == 5) {
+    text('5', 2*width/3, height - 70);
+  }
+  
+    if (R == 6) {
+    text('6', 2*width/3, height - 70);
+  }
+  
+    if (R == 7) {
+    text('7', 2*width/3, height - 70);
+  }
+  
+    if (R == 8) {
+    text('8', 2*width/3, height - 70);
+  }
+  
+    if (R == 9) {
+    text('9', 2*width/3, height - 70);
+  }
+  
+    if (R == 10) {
+    text('10', 2*width/3, height - 70);
+  }
+  
+  
+  if (L >= 10) {
+    textSize(30);
+    text('GAME OVER', (width/2)-85, height/2);
+    text('LEFT WINS', (width/2)-65, (height/2)+42);
+    x = width + 20
+    y = height + 20
+    vx = 0
+    vy = 0
+  }
+    
+  
+  if (R >= 10) {
+    textSize(30);
+    text('GAME OVER', (width/2)-85, height/2);
+    text('RIGHT WINS', (width/2)-82, (height/2)+84);
+    x = width + 20
+    y = height + 20
+    vx = 0
+    vy = 0
+  }
+  
+if (poses.length > 1) {
+  if (poses[0].pose.nose.x > poses[1].pose.nose.x) {
+    leftPaddle = poses[0].pose.nose.y
+    rightPaddle = poses[1].pose.nose.y
+  } else {
+    leftPaddle = poses[1].pose.nose.y
+    rightPaddle = poses[0].pose.nose.y
+  }
+ }
+}
+
+
+function mousePressed() {
+  print(poses);
+}
