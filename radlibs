@@ -1,0 +1,173 @@
+import React, { Component } from "react";
+
+import "./styles.css";
+
+var pages = {
+  start: {
+    content: (getData, setData) => (
+      <p>
+        Radlibs!
+      </p>
+    ),
+    buttons: [{ label: "Start!", page: "page1" }]
+  },
+  page1: {
+    content: (getData, setData) => (
+      <p>
+        firsthand emotion
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("emotion")}
+          onChange={event => setData("emotion", event.target.value)}
+        />
+        <br />
+        <br />
+        active verb
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("verb")}
+          onChange={event => setData("verb", event.target.value)}
+        />
+        <br />
+        <br />
+        improper place
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("place")}
+          onChange={event => setData("place", event.target.value)}
+        />
+      </p>
+    ),
+    buttons: [{ label: "continue", page: "page2" }]
+  },
+  page2: {
+    content: (getData, setData) => (
+      <p>
+        country of choice
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("country")}
+          onChange={event => setData("country", event.target.value)}
+        />
+        <br />
+        <br />
+        official title
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("title")}
+          onChange={event => setData("title", event.target.value)}
+        />
+        <br />
+        <br />
+        plural noun
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("noun")}
+          onChange={event => setData("noun", event.target.value)}
+        />
+      </p>
+    ),
+    buttons: [{ label: "continue", page: "page3" }]
+  },
+  
+  page3: {
+    content: (getData, setData) => (
+      <p>
+        business
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("business")}
+          onChange={event => setData("business", event.target.value)}
+        />
+        <br />
+        <br />
+        pronoun
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("pronoun")}
+          onChange={event => setData("pronoun", event.target.value)}
+        />
+        <br />
+        <br />
+        occupation
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("occupation")}
+          onChange={event => setData("occupation", event.target.value)}
+        />
+      </p>
+    ),
+    buttons: [{ label: "continue", page: "radlib" }]
+  },
+  radlib: {
+    content: (getData, setName) => (
+      <p>
+        I ran into the {getData("occupation")} on my way to the {getData("place")}, and {getData("pronoun")} told me that {getData("noun")} are {getData("verb")} all over the city! I've never felt so {getData("emotion")} in all my time as {getData("title")} of {getData("business")}. God bless {getData("country")}.
+      </p>
+    ),
+    buttons: [
+      { label: "start again", page: "start" }
+    ]
+  },
+};
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      page: "start",
+      name: ""
+    };
+  }
+
+  goToPage(pageName) {
+    this.setState({
+      page: pageName
+    });
+  }
+
+  setData(dataName, dataValue) {
+    var newState = {};
+    newState[dataName] = dataValue;
+    this.setState(newState);
+  }
+
+  render() {
+    var pageData = pages[this.state.page];
+
+    return (
+      <div className="App">
+        {pageData.content(
+          dataName => this.state[dataName],
+          (name, value) => this.setData(name, value)
+        )}
+        {pageData.buttons.map(buttonInfo => (
+          <button onClick={() => this.goToPage(buttonInfo.page)}>
+            {buttonInfo.label}
+          </button>
+        ))}
+      </div>
+    );
+  }
+}
+
+export default App;
